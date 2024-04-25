@@ -2,7 +2,7 @@ import os
 import functools
 from threading import Timer
 
-sep="---------------------------------------------------------------------------------------------"
+sep="------------------------------------------------------"
 
 def find_by_ext(path, *args):
     fullname = os.path.split(path)[-1]
@@ -27,6 +27,11 @@ def find_by_name(path, *args):
                 print(fullname)
     if len(fullname.split("."))==1:
         name = fullname
+        for arg in args:
+            if name == arg:
+                print(sep)
+                print(path.replace(fullname,''))
+                print(fullname)
 
 def find_by_contains(path, *args):
     fullname = os.path.split(path)[-1]
@@ -76,6 +81,28 @@ def do_in_dir(path, func, *args):
         for fullname in files:
             path = os.path.join(root, *dirs, fullname)
             func(path, *args)
+
+ignore = ['node_modules','.npm']
+def filter(path):
+    for word in ignore:
+        if word in path:
+            return False
+    return True
+
+def display_tree(path,*args):
+    if filter(path):
+        print(path)
+
+def display_only_folders(path,*args):
+    array = os.path.split(path)
+    for a in array:
+        a.pop
+    array = list(set(array))
+    for a in array:
+        print(a)
+
+    if filter(path):
+        print(path)
 
 def debounce(timeout: float):
     def decorator(func):
